@@ -2005,7 +2005,7 @@ describe('legend with custom doubleClickDelay', function() {
         .then(_assert('[long] after click + (1.1*t) delay + click', 2, 0))
         .then(delay(tLong + 10))
         .then(function() {
-            return Plotly.plot(gd, [], {}, {doubleClickDelay: tShort});
+            return Plotly.newPlot(gd, gd.data, gd.layout, {doubleClickDelay: tShort});
         })
         .then(click(0)).then(delay(tShort / 2))
         .then(_assert('[short] after click + (t/2) delay', 1, 0))

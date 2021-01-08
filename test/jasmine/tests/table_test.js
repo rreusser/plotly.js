@@ -299,19 +299,6 @@ describe('table', function() {
             expect(document.querySelectorAll('.' + cn.yColumn).length).toEqual(7);
         });
 
-        it('Calling `Plotly.plot` again should add the new table trace', function(done) {
-            var reversedMockCopy = Lib.extendDeep({}, mockCopy);
-            reversedMockCopy.data[0].header.values = reversedMockCopy.data[0].header.values.slice().reverse();
-            reversedMockCopy.data[0].cells.values = reversedMockCopy.data[0].cells.values.slice().reverse();
-            reversedMockCopy.data[0].domain.y = [0, 0.3];
-
-            Plotly.plot(gd, reversedMockCopy.data, reversedMockCopy.layout).then(function() {
-                expect(gd.data.length).toEqual(2);
-                expect(document.querySelectorAll('.' + cn.yColumn).length).toEqual(7 * 2);
-            })
-            .then(done, done.fail);
-        });
-
         it('Calling `Plotly.restyle` with a string path should amend the preexisting table', function(done) {
             expect(gd.data.length).toEqual(1);
 

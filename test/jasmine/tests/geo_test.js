@@ -1124,13 +1124,9 @@ describe('Test geo interactions', function() {
                 mock.data[0].lon.length
             );
 
-            var N_LOCATIONS_AT_START = mock.data[1].locations.length;
-
             var lonQueue = [45, -45, 12, 20];
             var latQueue = [-75, 80, 5, 10];
             var textQueue = ['c', 'd', 'e', 'f'];
-            var locationsQueue = ['AUS', 'FRA', 'DEU', 'MEX'];
-            var zQueue = [100, 20, 30, 12];
 
             beforeEach(function(done) {
                 var update = {
@@ -1187,11 +1183,6 @@ describe('Test geo interactions', function() {
                 });
             }
 
-            function countChoroplethPaths() {
-                return d3.selectAll('g.trace.choropleth')
-                    .selectAll('path.choroplethlocation')
-                    .size();
-            }
 
             it('should be able to add line/marker/text nodes', function(done) {
                 var i = 0;
@@ -1216,7 +1207,7 @@ describe('Test geo interactions', function() {
                     }
 
                     gd.calcdata = undefined;
-                    Plotly.plot(gd);
+                    Plotly.newPlot(gd);
                     i++;
                 }, INTERVAL);
             });
@@ -1247,7 +1238,7 @@ describe('Test geo interactions', function() {
                     }
 
                     gd.calcdata = undefined;
-                    Plotly.plot(gd);
+                    Plotly.newPlot(gd);
                     i++;
                 }, INTERVAL);
             });
@@ -1278,60 +1269,9 @@ describe('Test geo interactions', function() {
                     }
 
                     gd.calcdata = undefined;
-                    Plotly.plot(gd);
+                    Plotly.newPlot(gd);
                     i++;
                 }, INTERVAL);
-            });
-
-            it('should be able to delete line/marker/text nodes and choropleth paths', function(done) {
-                var trace0 = gd.data[0];
-                trace0.lon.shift();
-                trace0.lat.shift();
-                trace0.text.shift();
-
-                var trace1 = gd.data[1];
-                trace1.locations.shift();
-
-                gd.calcdata = undefined;
-                Plotly.plot(gd).then(function() {
-                    expect(countTraces('scattergeo')).toBe(1);
-                    expect(countTraces('choropleth')).toBe(1);
-
-                    expect(countScatterGeoLines()).toBe(1);
-                    expect(countScatterGeoMarkers()).toBe(N_MARKERS_AT_START - 1);
-                    expect(countScatterGeoTextGroups()).toBe(N_MARKERS_AT_START - 1);
-                    expect(countScatterGeoTextNodes()).toBe(N_MARKERS_AT_START - 1);
-                    checkScatterGeoOrder();
-
-                    expect(countChoroplethPaths()).toBe(N_LOCATIONS_AT_START - 1);
-                })
-                .then(done, done.fail);
-            });
-
-            it('should be able to update line/marker/text nodes and choropleth paths', function(done) {
-                var trace0 = gd.data[0];
-                trace0.lon = lonQueue;
-                trace0.lat = latQueue;
-                trace0.text = textQueue;
-
-                var trace1 = gd.data[1];
-                trace1.locations = locationsQueue;
-                trace1.z = zQueue;
-
-                gd.calcdata = undefined;
-                Plotly.plot(gd).then(function() {
-                    expect(countTraces('scattergeo')).toBe(1);
-                    expect(countTraces('choropleth')).toBe(1);
-
-                    expect(countScatterGeoLines()).toBe(1);
-                    expect(countScatterGeoMarkers()).toBe(lonQueue.length);
-                    expect(countScatterGeoTextGroups()).toBe(textQueue.length);
-                    expect(countScatterGeoTextNodes()).toBe(textQueue.length);
-                    checkScatterGeoOrder();
-
-                    expect(countChoroplethPaths()).toBe(locationsQueue.length);
-                })
-                .then(done, done.fail);
             });
         });
     });
@@ -2730,12 +2670,12 @@ describe('Test geo zoom/pan/drag interactions:', function() {
                 ['geo.projection.rotation.lon', 'geo.center.lon', 'geo.center.lat', 'geo.projection.scale']
             );
         })
-        .then(function() { return Plotly.plot(gd, [], {}, {scrollZoom: false}); })
+        .then(function() { return Plotly.newPlot(gd, gd.data, gd.layout, {scrollZoom: false}); })
         .then(function() { return scroll([200, 250], [-200, -200]); })
         .then(function() {
             _assert('with scrollZoom:false', [1.3], [134.4], undefined);
         })
-        .then(function() { return Plotly.plot(gd, [], {}, {scrollZoom: 'geo'}); })
+        .then(function() { return Plotly.newPlot(gd, gd.data, gd.layout, {scrollZoom: 'geo'}); })
         .then(function() { return scroll([200, 250], [-200, -200]); })
         .then(function() {
             _assert('with scrollZoom:geo',

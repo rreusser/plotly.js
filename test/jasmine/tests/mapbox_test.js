@@ -1435,7 +1435,7 @@ describe('mapbox plots', function() {
             expect(zoomNew).toBeGreaterThan(zoom);
             zoom = zoomNew;
         })
-        .then(function() { return Plotly.plot(gd, [], {}, {scrollZoom: false}); })
+        .then(function() { return Plotly.newPlot(gd, gd.data, gd.layout, {scrollZoom: false}); })
         .then(_scroll)
         .then(function() {
             expect(relayoutCnt).toBe(0, 'no additional relayout call');
@@ -1444,7 +1444,7 @@ describe('mapbox plots', function() {
             expect(zoomNew).toBe(zoom);
             zoom = zoomNew;
         })
-        .then(function() { return Plotly.plot(gd, [], {}, {scrollZoom: true}); })
+        .then(function() { return Plotly.newPlot(gd, gd.data, gd.layout, {scrollZoom: true}); })
         .then(_scroll)
         .then(function() {
             expect(relayoutCnt).toBe(1, 'scroll relayout cnt');

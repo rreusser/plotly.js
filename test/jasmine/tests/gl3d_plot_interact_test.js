@@ -1005,7 +1005,7 @@ describe('Test gl3d drag and wheel interactions', function() {
             relayoutCallback.calls.reset();
         }
 
-        Plotly.plot(gd, mock)
+        Plotly.newPlot(gd, mock)
         .then(function() {
             relayoutCallback = jasmine.createSpy('relayoutCallback');
             gd.on('plotly_relayout', relayoutCallback);
@@ -1067,7 +1067,7 @@ describe('Test gl3d drag and wheel interactions', function() {
         .then(function() {
             _assertAndReset(1);
 
-            return Plotly.plot(gd, [], {}, {scrollZoom: false});
+            return Plotly.newPlot(gd, gd.data, gd.layout, {scrollZoom: false});
         })
         .then(function() {
             _assertAndReset(0);
@@ -1081,7 +1081,7 @@ describe('Test gl3d drag and wheel interactions', function() {
         })
         .then(function() {
             _assertAndReset(0);
-            return Plotly.plot(gd, [], {}, {scrollZoom: 'gl3d'});
+            return Plotly.newPlot(gd, gd.data, gd.layout, {scrollZoom: 'gl3d'});
         })
         .then(function() {
             _assertAndReset(0);
@@ -1118,7 +1118,7 @@ describe('Test gl3d drag and wheel interactions', function() {
             relayoutCallback.calls.reset();
         }
 
-        Plotly.plot(gd, mock)
+        Plotly.newPlot(gd, mock)
         .then(function() {
             relayoutCallback = jasmine.createSpy('relayoutCallback');
             gd.on('plotly_relayout', relayoutCallback);
@@ -1180,7 +1180,7 @@ describe('Test gl3d drag and wheel interactions', function() {
         .then(function() {
             _assertAndReset(1);
 
-            return Plotly.plot(gd, [], {}, {scrollZoom: false});
+            return Plotly.newPlot(gd, gd.data, gd.layout, {scrollZoom: false});
         })
         .then(function() {
             _assertAndReset(0);
@@ -1194,7 +1194,7 @@ describe('Test gl3d drag and wheel interactions', function() {
         })
         .then(function() {
             _assertAndReset(0);
-            return Plotly.plot(gd, [], {}, {scrollZoom: 'gl3d'});
+            return Plotly.newPlot(gd, gd.data, gd.layout, {scrollZoom: 'gl3d'});
         })
         .then(function() {
             return scroll(sceneTarget);
@@ -1229,7 +1229,7 @@ describe('Test gl3d drag and wheel interactions', function() {
         var relayoutCnt = 0;
         var modeBar;
 
-        Plotly.plot(gd, mock)
+        Plotly.newPlot(gd, mock)
 
         .then(function() {
             modeBar = gd._fullLayout._modeBar;

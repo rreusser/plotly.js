@@ -276,7 +276,7 @@ describe('Test gl plot side effects', function() {
             expect(gl.drawingBufferHeight).toBe(h0, msg);
         }
 
-        Plotly.plot(gd, [{
+        Plotly.newPlot(gd, [{
             type: 'scattergl',
             mode: 'lines',
             y: [1, 2, 1]

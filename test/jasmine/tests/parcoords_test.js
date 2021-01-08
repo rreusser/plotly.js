@@ -538,7 +538,7 @@ describe('parcoords edge cases', function() {
             mockCopy.data[0].dimensions[i] = newDimension;
         }
 
-        Plotly.plot(gd, mockCopy).then(function() {
+        Plotly.newPlot(gd, mockCopy).then(function() {
             expect(gd.data.length).toEqual(1);
             expect(gd.data[0].dimensions.length).toEqual(60);
             expect(document.querySelectorAll('.axis').length).toEqual(60);
@@ -565,7 +565,7 @@ describe('parcoords edge cases', function() {
             mockCopy.data[0].dimensions[i] = newDimension;
         }
 
-        Plotly.plot(gd, mockCopy).then(function() {
+        Plotly.newPlot(gd, mockCopy).then(function() {
             expect(gd.data.length).toEqual(1);
             expect(gd.data[0].dimensions.length).toEqual(60);
             expect(document.querySelectorAll('.axis').length).toEqual(60);
@@ -655,37 +655,6 @@ describe('parcoords Lifecycle methods', function() {
         .then(done, done.fail);
     });
 
-    it('@gl Plotly.deleteTraces with two traces removes the deleted plot', function(done) {
-        var mockCopy = Lib.extendDeep({}, mock);
-        var mockCopy2 = Lib.extendDeep({}, mock);
-        mockCopy2.data[0].dimensions.splice(3, 4);
-        mockCopy.data[0].line.showscale = false;
-
-        Plotly.newPlot(gd, mockCopy)
-            .then(function() {
-                expect(gd.data.length).toEqual(1);
-                expect(document.querySelectorAll('.y-axis').length).toEqual(10);
-                return Plotly.plot(gd, mockCopy2);
-            })
-            .then(function() {
-                expect(gd.data.length).toEqual(2);
-                expect(document.querySelectorAll('.y-axis').length).toEqual(10 + 7);
-                return Plotly.deleteTraces(gd, [0]);
-            })
-            .then(function() {
-                expect(document.querySelectorAll('.gl-canvas').length).toEqual(3);
-                expect(document.querySelectorAll('.y-axis').length).toEqual(7);
-                expect(gd.data.length).toEqual(1);
-                return Plotly.deleteTraces(gd, 0);
-            })
-            .then(function() {
-                expect(document.querySelectorAll('.gl-canvas').length).toEqual(0);
-                expect(document.querySelectorAll('.y-axis').length).toEqual(0);
-                expect(gd.data.length).toEqual(0);
-            })
-            .then(done, done.fail);
-    });
-
     function _assertVisibleData(visible, msg) {
         return function() {
             var canvases = d3.selectAll('.gl-canvas');
@@ -734,31 +703,6 @@ describe('parcoords Lifecycle methods', function() {
     });
 
     describe('Having two datasets', function() {
-        it('@gl Two subsequent calls to Plotly.plot should create two parcoords rows', function(done) {
-            var mockCopy = Lib.extendDeep({}, mock);
-            var mockCopy2 = Lib.extendDeep({}, mock);
-            mockCopy.data[0].domain = {x: [0, 0.45]};
-            mockCopy2.data[0].domain = {x: [0.55, 1]};
-            mockCopy2.data[0].dimensions.splice(3, 4);
-
-            expect(document.querySelectorAll('.gl-container').length).toEqual(0);
-
-            Plotly.newPlot(gd, mockCopy)
-                .then(function() {
-                    expect(1).toEqual(1);
-                    expect(document.querySelectorAll('.gl-container').length).toEqual(1);
-                    expect(gd.data.length).toEqual(1);
-
-                    return Plotly.plot(gd, mockCopy2);
-                })
-                .then(function() {
-                    expect(1).toEqual(1);
-                    expect(document.querySelectorAll('.gl-container').length).toEqual(1);
-                    expect(gd.data.length).toEqual(2);
-                })
-                .then(done, done.fail);
-        });
-
         it('@gl Plotly.addTraces should add a new parcoords row', function(done) {
             var mockCopy = Lib.extendDeep({}, mock);
             var mockCopy2 = Lib.extendDeep({}, mock);
@@ -937,36 +881,6 @@ describe('parcoords basic use', function() {
             expect(gd.data[0].dimensions[1].range).toBeDefined();
             expect(gd.data[0].dimensions[1].range).toEqual([0, 700000]);
             expect(gd.data[0].dimensions[1].constraintrange).not.toBeDefined();
-        })
-        .then(done, done.fail);
-    });
-
-    it('@gl Calling `Plotly.plot` again should add the new parcoords', function(done) {
-        var reversedMockCopy = Lib.extendDeep({}, mockCopy);
-        reversedMockCopy.data[0].dimensions = reversedMockCopy.data[0].dimensions.slice().reverse();
-        reversedMockCopy.data[0].dimensions.forEach(function(d) {d.id = 'R_' + d.id;});
-        reversedMockCopy.data[0].dimensions.forEach(function(d) {d.label = 'R_' + d.label;});
-
-        Plotly.react(gd, mockCopy)
-        .then(function() {
-            return Plotly.plot(gd, reversedMockCopy);
-        })
-        .then(function() {
-            expect(gd.data.length).toEqual(2);
-
-            expect(gd.data[0].dimensions.length).toEqual(11);
-            expect(gd.data[0].line.cmin).toEqual(-4000);
-            expect(gd.data[0].dimensions[0].constraintrange).toBeDefined();
-            expect(gd.data[0].dimensions[0].constraintrange).toEqual([100000, 150000]);
-            expect(gd.data[0].dimensions[1].constraintrange).not.toBeDefined();
-
-            expect(gd.data[1].dimensions.length).toEqual(11);
-            expect(gd.data[1].line.cmin).toEqual(-4000);
-            expect(gd.data[1].dimensions[10].constraintrange).toBeDefined();
-            expect(gd.data[1].dimensions[10].constraintrange).toEqual([100000, 150000]);
-            expect(gd.data[1].dimensions[1].constraintrange).not.toBeDefined();
-
-            expect(document.querySelectorAll('.axis').length).toEqual(20); // one dimension is `visible: false`
         })
         .then(done, done.fail);
     });
